@@ -1,0 +1,1 @@
+export const INSERT_MESSAGE = 'INSERT_MESSAGE'
