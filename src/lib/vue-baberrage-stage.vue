@@ -2,7 +2,12 @@
   <div id="vue-baberrage-stage" 
        class="vue-baberrage-stage"
        :style="propStyle">
-      <VueBaberrageLane :ref="`lane_${n}`" :key="n" v-for="n in +lanes"/>
+      <VueBaberrageLane 
+        :ref="item.id" 
+        :key="item.id" 
+        :style="item.style"
+        :queue="item.queue"
+        v-for="item in lanesList"/>
   </div>
 </template>
 <script>
@@ -19,7 +24,7 @@ const BaberrageConfig = {
 
 export default {
   name: 'VueBaberrageStage',
-  props: ['width','height','mode','uri'],
+  props: ['width','height','mode','uri', 'lanes'],
   components: {
     VueBaberrageLane
   },
@@ -27,7 +32,8 @@ export default {
     return {
       barrageService: null,
       data: [],
-      lanes: 0,
+      lanesList: [],
+      lanesCount: 0,
       propStyle: {
         width: (isNaN(this.width)? this.width :  `${this.width}px`) || '300px',
         height: (isNaN(this.height)? this.height :  `${this.height}px`) || '400px',
@@ -41,26 +47,47 @@ export default {
       thrower.r('ParamInvaild','`mode` can only be `local` or `remote`.')
     }
 
+    this.lanesCount = this.lanes || config.default_lane
+
     const barrageConfig = {
       mode: this.mode === 'remote' ? VueBaberrage.REMOTE_MODE : VueBaberrage.LOCAL_MODE,
       uri: this.uri || '',
-      lanes: this.lanes || config.default_lane
+      lanes: this.lanesCount
     }
 
     this.barrageService = new BarrageService(barrageConfig)
 
     // Lane Amount
-    this.lanes = barrageConfig.lanes
+    this.laneInit()
 
     this.$babe_set_current_service(this.barrageService)
-    // MessageModel.fieldMapping = {type:'message', config: {user:'haha'}}
-    // let msg = new MessageModel({user:'baby',content:'hello'})
-    // console.log(MessageModel.fieldMapping)
+
+    // bind lane queue
+    this.barrageService.bindLane({ laneUIData: this.lanesList})
   },
   methods: {
-
+    laneInit () {
+      let height = config.default_message_height
+      Array.from({ length: this.lanesCount }, (v, k) => {
+        this.lanesList.push({
+          id: `lane_${k}`,
+          queue: [],
+          style: {
+            top: k * height + 'px',
+            left: 0,
+            width: '100%',
+            height: `${height}px`,
+            lineHeight: `${height}px`,
+            background: '#999'
+          }
+        })
+      })
+    }
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+.vue-baberrage-stage {
+  position: relative;
+}
 </style>

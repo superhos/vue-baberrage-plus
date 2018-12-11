@@ -9,9 +9,8 @@ export default class MessagePoolModel {
   constructor ({tag,lanes}) {
     this.poolTag = tag
     this.lanes = lanes
-    this.messagePool = {}
-    this.messageQueue$ = new BehaviorSubject({tag: 'begin'})
-    this.buildLane()
+    this.lanePool = {}
+    this.messageQueue$ = new BehaviorSubject()
     this.startWatch()
   }
 
@@ -21,15 +20,11 @@ export default class MessagePoolModel {
       bufferTime(3000)
     ).subscribe(val => {
       // Queue分配到lane中展示
-      // console.log(val.length)
-      val.forEach(message => {
-        if (message.tag === 'begin') return
-        const lane = this[`${config.balance_algorithm}Balance`]()
-        lane.push(message)
-      })
-      
-      console.log(this.messagePool)
-      // 通知界面 render
+      const lane = this[`${config.balance_algorithm}Balance`]()
+      console.log(lane)
+      lane.queue.push(val.filter(e => e))
+
+      // console.log(this.lanePool)
     })
   }
 
@@ -37,9 +32,9 @@ export default class MessagePoolModel {
   timeBalance () {
     // 通过总时长计算权值，选择权重最低的lane加入
     let result = {}
-    for (let key in this.messagePool) {
-      let lane = this.messagePool[key]
-      let score = lane.length === 0 ? 0 : ( lane.length === 1 ? lane[0].time : (lane.reduce((cal,cur) => {
+    for (let key in this.lanePool) {
+      let lane = this.lanePool[key]
+      let score = lane.queue.length === 0 ? 0 : ( lane.queue.length === 1 ? lane.queue[0].time : (lane.queue.reduce((cal,cur) => {
         cal = typeof cal === 'object' ? cal.time : cal
         return cal + cur.time
       })))
@@ -53,13 +48,15 @@ export default class MessagePoolModel {
   // 随机均衡算法 
   randomBalance () {
     let rand = Math.floor(Math.random() * this.lanes)
-    return this.messagePool[`lane_${rand}`]
+    console.log(this.lanePool)
+    return this.lanePool[rand]
   }
 
-  buildLane () {
-    Array.from({length: this.lanes}, (v, i) => {
-      this.messagePool[`lane_${i}`] = []
-    })
+  bindLane (laneUIData) {
+    // Array.from({length: this.lanes}, (v, i) => {
+    //   this.lanePool[`lane_${i}`] = []
+    // })
+      this.lanePool = laneUIData
   }
 
   insert (message) {

@@ -1,5 +1,7 @@
 import MessagePoolModel from '../models/message-pool.model'
-import { DEFAULT_POOL_TAG, LOCAL_MODE } from '../config/constant'
+import constant from '../config/constant'
+
+const { DEFAULT_POOL_TAG, LOCAL_MODE } = constant
 
 // Singleton Mode
 let __instance = (function () {
@@ -20,7 +22,7 @@ export default class BarrageService {
       mode: LOCAL_MODE,
       ...props
     }
-    
+
     this.messagePool = {
       [DEFAULT_POOL_TAG] : new MessagePoolModel({tag:DEFAULT_POOL_TAG,lanes:props.lanes})
     }
@@ -32,4 +34,9 @@ export default class BarrageService {
     this.messagePool[pool].insert(message)
   }
 
+  bindLane ({ pool, laneUIData}) {
+    pool = pool || DEFAULT_POOL_TAG
+    console.log(pool)
+    this.messagePool[pool].bindLane(laneUIData)
+  }
 }
