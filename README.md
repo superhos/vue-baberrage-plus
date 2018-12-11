@@ -1,34 +1,4 @@
-# vue-baberrage-plus
+# Vue-Baberrage-Plus
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Project Design
+[Introduction](https://blog.chenhaotaishuaile.com/2018/11/22/baberrage-rebuild-1/)

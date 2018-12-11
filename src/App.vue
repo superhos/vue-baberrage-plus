@@ -1,7 +1,11 @@
 <template>
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <VueBaberrageStage width="100%" height="500" />
+    <VueBaberrageStage 
+      width="100%" 
+      height="500" 
+      mode="local"/>
+      <button @click="add">Add</button>
   </div>
 </template>
 
@@ -15,14 +19,19 @@ export default {
   },
   data () {
     return {
+      id: 1,
       datas: [1,2,3]
     }
   },
   mounted () {
-    VueBaberrageStage.setConfig({
-      mode: VueBaberrage.LOCAL_MODE,
-      data: this.datas
-    })
+  },
+  methods: {
+    add () {
+      this.$babe_push({ message: {
+        user: this.id++,
+        content: 'heyhey'
+      }})
+    }
   }
 }
 </script>

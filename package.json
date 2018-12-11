@@ -10,8 +10,15 @@
   },
   "dependencies": {
     "@reactivex/rxjs": "^6.3.3",
+    "axios": "^0.18.0",
+    "debug": "^4.1.0",
+    "es6-tween": "^5.3.1",
+    "lodash": "^4.17.11",
     "rxjs": "^6.3.3",
+    "rxjs-compat": "^6.3.3",
+    "thrower": "^1.6.3",
     "vue": "^2.5.17",
+    "vue-axios": "^2.1.4",
     "vue-rx": "^6.0.1",
     "vuex": "^3.0.1"
   },
@@ -25,6 +32,7 @@
     "chai": "^4.1.2",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
+    "mockjs": "^1.0.1-beta3",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "vue-template-compiler": "^2.5.17"

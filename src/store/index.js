@@ -6,7 +6,10 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    messagePool: []
+    // 显示泳道
+    displayLanes: {
+
+    }
   },
   mutations: {
     [INSERT_MESSAGE] (state, payload) {
