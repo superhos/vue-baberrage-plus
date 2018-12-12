@@ -16,6 +16,7 @@ import VueBaberrage from './vue-baberrage'
 import VueBaberrageLane from './vue-baberrage-lane'
 import BarrageService from '../services/barrage.service'
 import MessageModel from '../models/message.model'
+import LaneModel from '../models/lane.model'
 import thrower from 'thrower'
 
 const BaberrageConfig = {
@@ -69,7 +70,7 @@ export default {
     laneInit () {
       let height = config.default_message_height
       Array.from({ length: this.lanesCount }, (v, k) => {
-        this.lanesList.push({
+        this.lanesList.push(new LaneModel({
           id: `lane_${k}`,
           queue: [],
           style: {
@@ -80,7 +81,7 @@ export default {
             lineHeight: `${height}px`,
             background: '#999'
           }
-        })
+        }))
       })
     }
   }

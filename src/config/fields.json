@@ -1,5 +1,6 @@
 {
   "message": {
+    "id"  : "id",
     "user": "user",
     "content": "content",
     "time": "time"

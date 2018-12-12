@@ -2,6 +2,7 @@ const log = require('debug')('INFO:MessagePool:')
 import { BehaviorSubject } from 'rxjs';
 import { bufferTime } from 'rxjs/operators';
 import MessageModel from './message.model'
+import MessageQueueModel from './message-queue.model'
 import config from '../config'
 
 // Message总调度
@@ -20,11 +21,10 @@ export default class MessagePoolModel {
       bufferTime(3000)
     ).subscribe(val => {
       // Queue分配到lane中展示
+      val = val.filter(e => e)
+      if (val.length === 0) return
       const lane = this[`${config.balance_algorithm}Balance`]()
-      console.log(lane)
-      lane.queue.push(val.filter(e => e))
-
-      // console.log(this.lanePool)
+      lane.queue.push(new MessageQueueModel({ queue: val.filter(e => e)}))
     })
   }
 
@@ -34,10 +34,7 @@ export default class MessagePoolModel {
     let result = {}
     for (let key in this.lanePool) {
       let lane = this.lanePool[key]
-      let score = lane.queue.length === 0 ? 0 : ( lane.queue.length === 1 ? lane.queue[0].time : (lane.queue.reduce((cal,cur) => {
-        cal = typeof cal === 'object' ? cal.time : cal
-        return cal + cur.time
-      })))
+      let score = lane.calTime()
       if (score === 0) return lane
       if (!result[score]) result[score] = []
       result[score].push(lane)
@@ -48,20 +45,14 @@ export default class MessagePoolModel {
   // 随机均衡算法 
   randomBalance () {
     let rand = Math.floor(Math.random() * this.lanes)
-    console.log(this.lanePool)
     return this.lanePool[rand]
   }
 
   bindLane (laneUIData) {
-    // Array.from({length: this.lanes}, (v, i) => {
-    //   this.lanePool[`lane_${i}`] = []
-    // })
       this.lanePool = laneUIData
   }
 
   insert (message) {
-    console.log(new MessageModel(message))
-    // this.messageQueue.push(new MessageModel(message))
     this.messageQueue$.next(new MessageModel(message))
   }
 }

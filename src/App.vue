@@ -28,7 +28,8 @@ export default {
   methods: {
     add () {
       this.$babe_push({ message: {
-        user: this.id++,
+        id: this.id++,
+        user: this.id,
         content: 'heyhey'
       }})
     }
