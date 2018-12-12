@@ -1,13 +1,15 @@
 const log = require('debug')('INFO:MessagePool:')
-import { BehaviorSubject } from 'rxjs';
-import { bufferTime } from 'rxjs/operators';
+import { from, interval, BehaviorSubject } from 'rxjs';
+import { filter, bufferTime } from 'rxjs/operators';
 import MessageModel from './message.model'
 import MessageQueueModel from './message-queue.model'
 import config from '../config'
+import { buffer } from 'rxjs-compat/operator/buffer';
 
 // Message总调度
 export default class MessagePoolModel {
-  constructor ({tag,lanes}) {
+  constructor (service, {tag,lanes}) {
+    this.service = service
     this.poolTag = tag
     this.lanes = lanes
     this.lanePool = {}
@@ -18,14 +20,18 @@ export default class MessagePoolModel {
   startWatch () {
     log('Start Watching')
     this.messageQueue$.pipe(
-      bufferTime(3000)
+      bufferTime(1000, 1000, 3),
     ).subscribe(val => {
       // Queue分配到lane中展示
-      val = val.filter(e => e)
-      if (val.length === 0) return
-      const lane = this[`${config.balance_algorithm}Balance`]()
-      lane.queue.push(new MessageQueueModel({ queue: val.filter(e => e)}))
+      this.chooseLaneAndPushMessage(val)
     })
+  }
+
+  chooseLaneAndPushMessage (messageList) {
+    messageList = messageList.filter(e => e)
+    if (messageList.length === 0) return
+    const lane = this[`${config.balance_algorithm}Balance`]()
+    lane.queue.push(new MessageQueueModel({ queue: messageList.filter(e => e)}))
   }
 
   // 时长轮询均衡算法

@@ -24,13 +24,42 @@ export default {
     }
   },
   mounted () {
+    this.$babePushListAndPlay({messageList : [
+      {
+        id: this.id++,
+        user: this.id,
+        display_time: 5000, // 显示时间 ms
+        content: 'aaaaa' + this.id
+      },
+      {
+        id: this.id++,
+        user: this.id,
+        display_time: 8000, // 显示时间 ms
+        content: 'bbbbbb' + this.id
+      },
+      {
+        id: this.id++,
+        user: this.id,
+        display_time: 8000, // 显示时间 ms
+        content: 'ccccc' + this.id
+      },
+      {
+        id: this.id++,
+        user: this.id,
+        display_time: 9000, // 显示时间 ms
+        content: 'ddddd' + this.id
+      },
+    ]
+    }
+    )
   },
   methods: {
     add () {
-      this.$babe_push({ message: {
+      this.$babePush({ message: {
         id: this.id++,
         user: this.id,
-        content: 'heyhey'
+        display_time: 5000, // 显示时间 ms
+        content: 'heyhey' + this.id
       }})
     }
   }

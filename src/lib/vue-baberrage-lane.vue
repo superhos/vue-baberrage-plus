@@ -42,6 +42,7 @@ export default {
         // this.stopRoll()
       } else {
         let queueModel = this.queueData.find(q => q.notRunning)
+        if (!queueModel) return
         this.track.addPackage(queueModel)
         queueModel.notRunning = false
       }

@@ -70,6 +70,7 @@ export default class TrackService {
   }
 
   addPackage (pkg) {
+    if (!pkg) return
     pkg.startTime = this.currentTime
     pkg.style = {
       left: 0//this.width + 'px'

@@ -3,6 +3,7 @@
     "id"  : "id",
     "user": "user",
     "content": "content",
-    "time": "time"
+    "time": "time",
+    "display_time": "display_time"
   }
 }
