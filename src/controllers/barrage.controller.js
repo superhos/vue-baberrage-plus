@@ -1,6 +1,6 @@
 import MessagePoolModel from '../models/message-pool.model'
-import PlayerService from './player.service'
-import TrackService from './track.service'
+import PlayerService from '../services/player.service'
+import TrackService from '../services/track.service'
 import constant from '../config/constant'
 
 const { DEFAULT_POOL_TAG, LOCAL_MODE } = constant
@@ -14,7 +14,7 @@ let __instance = (function () {
   }
 }());
 
-export default class BarrageService {
+export default class BarrageController {
 
   constructor(props) {
 		if (__instance()) return __instance();
@@ -56,7 +56,7 @@ export default class BarrageService {
     if (messages.length > 0) {
       messages.forEach(message => this.pushMessage({message}))
     }
-    if (this.playerState === BarrageService.PLAYER_START) {
+    if (this.playerState === BarrageController.PLAYER_START) {
       this.runningPlayer = requestAnimationFrame((time) => this.playing(time))
     }
   }

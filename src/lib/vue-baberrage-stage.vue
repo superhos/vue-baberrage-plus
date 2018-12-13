@@ -14,7 +14,7 @@
 import config from '../config'
 import VueBaberrage from './vue-baberrage'
 import VueBaberrageLane from './vue-baberrage-lane'
-import BarrageService from '../services/barrage.service'
+import BarrageController from '../controllers/barrage.controller'
 import MessageModel from '../models/message.model'
 import LaneModel from '../models/lane.model'
 import thrower from 'thrower'
@@ -31,14 +31,14 @@ export default {
   },
   data () {
     return {
-      barrageService: null,
+      barrageController: null,
       data: [],
       lanesList: [],
       lanesCount: 0,
       propStyle: {
         width: (isNaN(this.width)? this.width :  `${this.width}px`) || '300px',
         height: (isNaN(this.height)? this.height :  `${this.height}px`) || '400px',
-        background: '#CCC'
+        background: 'rgb(120, 205, 255)'
       },
       mySubject: null,
     }
@@ -56,15 +56,15 @@ export default {
       lanes: this.lanesCount
     }
 
-    this.barrageService = new BarrageService(barrageConfig)
+    this.barrageController = new BarrageController(barrageConfig)
 
     // Lane Amount
     this.laneInit()
 
-    this.$babe_set_current_service(this.barrageService)
+    this.$babe_set_barrage_controller(this.barrageController)
 
     // bind lane queue
-    this.barrageService.bindLane({ laneUIData: this.lanesList})
+    this.barrageController.bindLane({ laneUIData: this.lanesList})
   },
   methods: {
     laneInit () {
@@ -79,7 +79,8 @@ export default {
             width: '100%',
             height: `${height}px`,
             lineHeight: `${height}px`,
-            background: '#999'
+            background: 'rgba(120, 205, 255,.5)',
+            border: '1px dashed #FFF'
           }
         }))
       })

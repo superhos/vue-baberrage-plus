@@ -1,41 +1,40 @@
 const log = require('debug')('INFO:VueInstallConfig:')
-let service
+let controller
 
 module.exports = {
-  
-  install(Vue,options){
+  install( Vue, options ){
 		Vue.prototype.$babePush = ({
       pool, lane, message
     }) => {
       // console.log(pool, lane, message)
-      service.pushMessage({message})
+      controller.pushMessage({message})
     }
 
     Vue.prototype.$babePushListAndPlay = ({
       pool, lane, messageList
     }) => {
       // console.log(pool, lane, message)
-      service.setMessageList({messageList})
-      service.play()
+      controller.setMessageList({messageList})
+      controller.play()
     }
 
     Vue.prototype.$babePlay = () => {
       // 开始播放
-      service.play()
+      controller.play()
     }
 
     Vue.prototype.$babeStop = () => {
       // 开始播放
-      service.stop()
+      controller.stop()
     }
 
     Vue.prototype.$babePause = () => {
       // 开始播放
-      service.pause()
+      controller.pause()
     }
     
-    Vue.prototype.$babe_set_current_service = (svice) => {
-      service = svice
+    Vue.prototype.$babe_set_barrage_controller = (contl) => {
+      controller = contl
     }
 
     Vue.prototype.$current_pool = () => {
