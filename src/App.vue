@@ -6,6 +6,8 @@
       height="500" 
       mode="local"/>
       <button @click="add">Add</button>
+      <button @click="play">Play</button>
+      <button @click="pause">Pause</button>
   </div>
 </template>
 
@@ -61,6 +63,12 @@ export default {
         display_time: 5000, // 显示时间 ms
         content: 'heyhey' + this.id
       }})
+    },
+    play () {
+      this.$babePlay()
+    },
+    pause () {
+      this.$babePause()
     }
   }
 }

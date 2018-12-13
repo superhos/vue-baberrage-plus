@@ -28,6 +28,11 @@ module.exports = {
       // 开始播放
       service.stop()
     }
+
+    Vue.prototype.$babePause = () => {
+      // 开始播放
+      service.pause()
+    }
     
     Vue.prototype.$babe_set_current_service = (svice) => {
       service = svice

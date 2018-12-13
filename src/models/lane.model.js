@@ -16,4 +16,11 @@ export default class LaneModel {
     this.queue.forEach(task => time += task.calTime())
     return time
   }
+
+  calWidth () {
+    let width = 0
+    if ( this.queue.length ===0 ) return 0
+    this.queue.forEach(task => width += task.calWidth())
+    return width
+  }
 }

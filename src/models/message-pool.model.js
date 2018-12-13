@@ -1,10 +1,9 @@
 const log = require('debug')('INFO:MessagePool:')
-import { from, interval, BehaviorSubject } from 'rxjs';
-import { filter, bufferTime } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { bufferTime } from 'rxjs/operators';
 import MessageModel from './message.model'
 import MessageQueueModel from './message-queue.model'
 import config from '../config'
-import { buffer } from 'rxjs-compat/operator/buffer';
 
 // Message总调度
 export default class MessagePoolModel {
@@ -20,7 +19,7 @@ export default class MessagePoolModel {
   startWatch () {
     log('Start Watching')
     this.messageQueue$.pipe(
-      bufferTime(1000, 1000, 3),
+      bufferTime(config.default_buffer_time, config.default_buffer_time, config.default_buffer_max),
     ).subscribe(val => {
       // Queue分配到lane中展示
       this.chooseLaneAndPushMessage(val)
@@ -52,6 +51,19 @@ export default class MessagePoolModel {
   randomBalance () {
     let rand = Math.floor(Math.random() * this.lanes)
     return this.lanePool[rand]
+  }
+
+  // 最短长度算法
+  widthBalance () {
+    let result = {}
+    for (let key in this.lanePool) {
+      let lane = this.lanePool[key]
+      let score = lane.calWidth()
+      if (score === 0) return lane
+      if (!result[score]) result[score] = []
+      result[score].push(lane)
+    }
+    return result[Math.min(...Object.keys(result).map(e => +e))][0]
   }
 
   bindLane (laneUIData) {

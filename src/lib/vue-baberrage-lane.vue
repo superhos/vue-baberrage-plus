@@ -1,7 +1,6 @@
 <template>
   <div class="vue-baberrage-lane">
       <div class="vue-baberrage-msg" :style="task.style" v-for="(task,key) in queueData" :key="key">
-        <div style="display:none">{{task}}</div>
         <ul>
           <li :style="messageStyle" v-for="item in task.queue" :key="item.id">
             {{item.content}}
@@ -21,6 +20,7 @@
 import TrackService from '../services/track.service'
 import _ from 'lodash'
 import config from '../config'
+import { setTimeout } from 'timers';
 
 export default {
   props: ['queue'],
@@ -70,6 +70,13 @@ export default {
       if (ind >= 0) {
         this.queueData.splice(ind, 1)
       }
+    })
+
+    this.track.addEventListener('UPDATE_QUEUE', (pkgList) => {
+      pkgList.forEach(pkg => {
+        const ind = this.queueData.indexOf(pkg)
+        this.$set(this.queueData, ind, pkg)
+      })
     })
   }
 }

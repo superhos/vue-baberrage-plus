@@ -1,4 +1,6 @@
 import MessagePoolModel from '../models/message-pool.model'
+import PlayerService from './player.service'
+import TrackService from './track.service'
 import constant from '../config/constant'
 
 const { DEFAULT_POOL_TAG, LOCAL_MODE } = constant
@@ -14,16 +16,11 @@ let __instance = (function () {
 
 export default class BarrageService {
 
-  static PLAYER_STOP = 'player_stop'
-  static PLAYER_START = 'player_start'
-  static PLAYER_PAUSE = 'player_pause'
-
   constructor(props) {
 		if (__instance()) return __instance();
-    //按自己需求实例化
     // default pool
-    this.runningTime = 0
-    this.playerState = BarrageService.PLAYER_STOP
+    this.player = new PlayerService()
+    this.track = new TrackService()
     this.config = {
       mode: LOCAL_MODE,
       ...props
@@ -36,39 +33,32 @@ export default class BarrageService {
   }
   
   play () {
-    if (!this.messageList) {
-      throw new Error('ParamInvaild: Message List can not be null')
-    }
-    if (this.messageList.length === 0) return
-    this.playerState = BarrageService.PLAYER_START
-    this.runningTime = new Date().getTime()
-    this.runningPlayer = requestAnimationFrame((time) => this.playing(time))
+    this.track.start()
+    this.player.play()
+    this.player.interval((currentTime) => {
+      this.playing(currentTime)
+    }, 1000)
+  }
+
+  pause () {
+    this.player.pause()
+    this.track.pause()
+  }
+  
+  stop () {
+    this.player.stop()
+    this.track.pause()
   }
 
   playing (currentTime) {
     this.currentTime = currentTime
-    const messages = this.messageList.filter(message => {
-      return this.currentTime >= message.display_time && 
-              this.currentTime < message.display_time + 50
-    })
+    const messages = this.messageList.filter(message => currentTime === message.display_time)
     if (messages.length > 0) {
-      console.log(messages)
       messages.forEach(message => this.pushMessage({message}))
     }
     if (this.playerState === BarrageService.PLAYER_START) {
       this.runningPlayer = requestAnimationFrame((time) => this.playing(time))
     }
-  }
-
-  pause () {
-    this.playerState = BarrageService.PLAYER_PAUSE
-  }
-
-  stop () {
-    this.playerState = BarrageService.PLAYER_STOP
-    this.currentTime = -1
-    this.runningTime = -1
-    this.runningPlayer = null
   }
 
   pushMessage ({pool, lane, message}) {
