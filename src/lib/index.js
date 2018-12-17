@@ -1,44 +1,20 @@
+import VueBaberrage from './vue-baberrage'
+import BarrageController from '../controllers/barrage.controller'
 const log = require('debug')('INFO:VueInstallConfig:')
-let controller
 
-module.exports = {
+export default {
   install( Vue, options ){
-		Vue.prototype.$babePush = ({
-      pool, lane, message
-    }) => {
-      // console.log(pool, lane, message)
-      controller.pushMessage({message})
+    // init plugin
+    log('Plugin Init')
+    options = options || {}
+    const barrageConfig = {
+      mode: options.mode  || VueBaberrage.LOCAL_MODE,
+      uri: options.uri || '',
+      lanes: 3,
+      ...options
     }
+    BarrageController.getInstance().setConfig(barrageConfig)
 
-    Vue.prototype.$babePushListAndPlay = ({
-      pool, lane, messageList
-    }) => {
-      // console.log(pool, lane, message)
-      controller.setMessageList({messageList})
-      controller.play()
-    }
-
-    Vue.prototype.$babePlay = () => {
-      // 开始播放
-      controller.play()
-    }
-
-    Vue.prototype.$babeStop = () => {
-      // 开始播放
-      controller.stop()
-    }
-
-    Vue.prototype.$babePause = () => {
-      // 开始播放
-      controller.pause()
-    }
-    
-    Vue.prototype.$babe_set_barrage_controller = (contl) => {
-      controller = contl
-    }
-
-    Vue.prototype.$current_pool = () => {
-      console.log(1, 2, 3)
-		}
+		Vue.prototype.$Baberrage = BarrageController.getInstance()
 	}
 }

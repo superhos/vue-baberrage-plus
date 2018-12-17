@@ -80,7 +80,6 @@ export default class TrackService {
     }
 
     if (!pkg.v) pkg.v = (this.width + pkg.width) / pkg.time
-    // console.log(pkg.gapTime)
     let distance = pkg.v * pkg.gapTime
     pkg.force(distance)
   }
@@ -91,7 +90,6 @@ export default class TrackService {
     pkg.time = pkg.time || config.default_time 
     pkg.reposition(this.width)
     this.packages.push(pkg)
-    // console.log(this.packages)
   }
 
   addEventListener(event, callback) {

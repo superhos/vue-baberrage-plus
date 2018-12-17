@@ -2,7 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store/index'
 
-import Rx from 'rxjs'
+// import Rx from 'rxjs'
+const Rx = require('rxjs')
 import VueRx from 'vue-rx'
 
 import axios from 'axios'

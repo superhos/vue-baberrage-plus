@@ -3,7 +3,7 @@ export default {
   default_font_size: 18,
   default_lane: 3,
   default_time: 8000, // s
-  default_buffer_time: 1000,
+  default_buffer_time: 2000,
   default_buffer_max: 3,
   // lane balance algorithm time or random or width
   balance_algorithm: 'time' // 'time'

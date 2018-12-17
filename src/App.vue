@@ -26,38 +26,19 @@ export default {
     }
   },
   mounted () {
-    this.$babePushListAndPlay({messageList : [
-      {
-        id: this.id++,
-        user: this.id,
-        display_time: 5000, // 显示时间 ms
-        content: 'aaaaa' + this.id
-      },
-      {
-        id: this.id++,
-        user: this.id,
-        display_time: 8000, // 显示时间 ms
-        content: 'bbbbbb' + this.id
-      },
-      {
-        id: this.id++,
-        user: this.id,
-        display_time: 8000, // 显示时间 ms
-        content: 'ccccc' + this.id
-      },
-      {
-        id: this.id++,
-        user: this.id,
-        display_time: 9000, // 显示时间 ms
-        content: 'ddddd' + this.id
-      },
-    ]
-    }
-    )
+    const mock = Array.from({length: 500}, (v, i) => {
+        return {
+              id: ++i,
+              user: i,
+              display_time: 1000 + i * 1000, // 显示时间 ms
+              content: 'aaaaa' + i
+            }
+      })
+    this.$Baberrage.pushList({messageList : mock })
   },
   methods: {
     add () {
-      this.$babePush({ message: {
+      this.$Baberrage.push({ message: {
         id: this.id++,
         user: this.id,
         display_time: 5000, // 显示时间 ms
@@ -65,10 +46,10 @@ export default {
       }})
     },
     play () {
-      this.$babePlay()
+      this.$Baberrage.play()
     },
     pause () {
-      this.$babePause()
+      this.$Baberrage.pause()
     }
   }
 }

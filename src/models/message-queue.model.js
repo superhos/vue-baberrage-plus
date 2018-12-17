@@ -13,7 +13,6 @@ export default class MessageQueueModel {
   constructor (options) {
     this.queue = options.queue
     this.direction = MessageQueueModel.DIRECTION_RIGHT_TO_LEFT
-    console.log(MessageQueueModel.DIRECTION_LEFT_TO_RIGHT)
     this.startTime = 0
     this.currentTime = 0
     this.id = uuidv4()
@@ -36,7 +35,6 @@ export default class MessageQueueModel {
   // 重新放置初始位置
   reposition (laneWidth) {
     this.laneWidth = laneWidth
-    console.log(this.direction)
     switch (this.direction) {
       case MessageQueueModel.DIRECTION_LEFT_TO_RIGHT : this.left = - this.width ;break;
       case MessageQueueModel.DIRECTION_RIGHT_TO_LEFT : this.left = laneWidth;break;
@@ -50,7 +48,6 @@ export default class MessageQueueModel {
     if (!this.laneWidth) {
       throw new Error ('ParamInvaild: Please execute `reposition(landWidth)` firstly.')
     }
-    // console.log(distance)
     switch (this.direction) {
       case MessageQueueModel.DIRECTION_LEFT_TO_RIGHT : this.left += distance;break;
       case MessageQueueModel.DIRECTION_RIGHT_TO_LEFT : this.left -= distance;break;

@@ -50,18 +50,10 @@ export default {
 
     this.lanesCount = this.lanes || config.default_lane
 
-    const barrageConfig = {
-      mode: this.mode === 'remote' ? VueBaberrage.REMOTE_MODE : VueBaberrage.LOCAL_MODE,
-      uri: this.uri || '',
-      lanes: this.lanesCount
-    }
-
-    this.barrageController = new BarrageController(barrageConfig)
+    this.barrageController = BarrageController.getInstance()
 
     // Lane Amount
     this.laneInit()
-
-    this.$babe_set_barrage_controller(this.barrageController)
 
     // bind lane queue
     this.barrageController.bindLane({ laneUIData: this.lanesList})

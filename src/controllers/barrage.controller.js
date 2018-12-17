@@ -3,21 +3,23 @@ import PlayerService from '../services/player.service'
 import TrackService from '../services/track.service'
 import constant from '../config/constant'
 
+const log = require('debug')('INFO:VueInstallConfig:')
 const { DEFAULT_POOL_TAG, LOCAL_MODE } = constant
-
-// Singleton Mode
-let __instance = (function () {
-  let instance;
-  return (newInstance) => {
-    if (newInstance) instance = newInstance;
-    return instance;
-  }
-}());
 
 export default class BarrageController {
 
-  constructor(props) {
-		if (__instance()) return __instance();
+  static instance
+
+  static getInstance () {
+    if(!BarrageController.instance){
+      BarrageController.instance = new BarrageController()
+    }
+
+    return BarrageController.instance
+  }
+
+  setConfig (props) {
+    log('Config Set')
     // default pool
     this.player = new PlayerService()
     this.track = new TrackService()
@@ -29,9 +31,8 @@ export default class BarrageController {
     this.messagePool = {
       [DEFAULT_POOL_TAG] : new MessagePoolModel(this,{tag:DEFAULT_POOL_TAG,lanes:props.lanes})
     }
-	  __instance(this);
   }
-  
+
   play () {
     this.track.start()
     this.player.play()
@@ -54,26 +55,25 @@ export default class BarrageController {
     this.currentTime = currentTime
     const messages = this.messageList.filter(message => currentTime === message.display_time)
     if (messages.length > 0) {
-      messages.forEach(message => this.pushMessage({message}))
+      messages.forEach(message => this.push({message}))
     }
     if (this.playerState === BarrageController.PLAYER_START) {
       this.runningPlayer = requestAnimationFrame((time) => this.playing(time))
     }
   }
 
-  pushMessage ({pool, lane, message}) {
+  push ({pool, lane, message}) {
     pool = pool || DEFAULT_POOL_TAG
     this.messagePool[pool].insert(message)
   }
-
-  setMessageList({pool, lane, messageList}) {
+  
+  pushList({pool, lane, messageList}) {
     pool = pool || DEFAULT_POOL_TAG
     this.messageList = messageList
   }
-
+  
   bindLane ({ pool, laneUIData}) {
     pool = pool || DEFAULT_POOL_TAG
-    console.log(pool)
     this.messagePool[pool].bindLane(laneUIData)
   }
 }
