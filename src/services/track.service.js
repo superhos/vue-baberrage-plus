@@ -2,6 +2,7 @@
  * 一直滚动的track
  */
 import config from '../config'
+import EventBus from '../utils/eventbus'
 
 let __instance = (function () {
   let instance;
@@ -24,7 +25,6 @@ export default class TrackService {
     this.packages = []
     this.state = TrackService.INIT
     this.runningTime = 0 // 统计总运行时间
-    this.listeners = {}
     this.width = window.innerWidth
 	  __instance(this);
   }
@@ -53,19 +53,22 @@ export default class TrackService {
   }
 
   rolling (currentTime) {
-    if (!this.lastTime) this.lastTime = currentTime
-    let gapTime = currentTime - this.lastTime
-    this.lastTime = currentTime
+    // if (!this.lastTime) this.lastTime = currentTime
+    // let gapTime = currentTime - this.lastTime
+    // this.lastTime = currentTime
 
-    if (gapTime !== 0) {
-      this.packages.forEach(pkg => {
-        pkg.gapTime = gapTime
-        this.calLeft (pkg)
-      })
-      this.emit ('UPDATE_QUEUE', this.packages)
-    }
+    // if (gapTime !== 0) {
+    //   this.packages.forEach(pkg => {
+    //     pkg.gapTime = gapTime
+    //     this.calLeft (pkg)
+    //   })
+    //   this.emit ('UPDATE_QUEUE', this.packages)
+    // }
+
+    this.emit('FRAME_FIRE', currentTime)
     
     if (this.state === TrackService.ROLLING) {
+      // this.frameHandler = requestAnimationFrame((time) => { this.rolling(time)})
       this.frameHandler = requestAnimationFrame((time) => { this.rolling(time)})
     }
   }
@@ -93,12 +96,10 @@ export default class TrackService {
   }
 
   addEventListener(event, callback) {
-    if (!this.listeners[event]) this.listeners[event] = []
-    this.listeners[event].push(callback)
+    EventBus.on(event, callback)
   }
 
   emit (event, data) {
-    if (!this.listeners[event]) return
-    this.listeners[event].forEach(evt => evt(data))
+    EventBus.emit(event, data)
   }
 }

@@ -1,7 +1,7 @@
 export default {
   default_message_height: 30,
   default_font_size: 18,
-  default_lane: 3,
+  default_lane: 5,
   default_time: 8000, // s
   default_buffer_time: 2000,
   default_buffer_max: 3,

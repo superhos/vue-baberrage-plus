@@ -68,7 +68,7 @@ export default {
           style: {
             top: k * height + 'px',
             left: 0,
-            width: '100%',
+            // width: '100%',
             height: `${height}px`,
             lineHeight: `${height}px`,
             background: 'rgba(120, 205, 255,.5)',
