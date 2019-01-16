@@ -9,7 +9,7 @@ import VueRx from 'vue-rx'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
-import VueBaberrage from './lib'
+import VueBaberrage from './components'
 
 Vue.use(VueBaberrage)
 

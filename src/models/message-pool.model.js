@@ -18,11 +18,21 @@ export default class MessagePoolModel {
 
   startWatch () {
     log('Start Watching')
+    // 防止弹幕井喷
     this.messageQueue$.pipe(
       bufferTime(config.default_buffer_time, config.default_buffer_time, config.default_buffer_max),
-    ).subscribe(val => {
+    ).subscribe(messages => {
+      // Old Version: 计算每个Lane的接受能力，再派发弹幕
       // Queue分配到lane中展示
-      this.chooseLaneAndPushMessage(val)
+      // this.chooseLaneAndPushMessage(val)
+
+      // New Version: 直接丢到弹幕队列中，让Lane自己评估自己的能力再去接收队列
+      messages = messages.filter(e => e)
+      if (messages.length === 0) return
+      console.log(messages)
+      this.service.env.$store.dispatch('insertMessage', {
+        messages
+      })
     })
   }
 

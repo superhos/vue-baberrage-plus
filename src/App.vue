@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { VueBaberrage, VueBaberrageStage } from './lib/vue-baberrage-plus'
+import { VueBaberrage, VueBaberrageStage } from './components/vue-baberrage-plus'
 
 export default {
   name: 'app',

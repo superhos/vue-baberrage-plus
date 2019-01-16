@@ -1,6 +1,5 @@
 import MessagePoolModel from '../models/message-pool.model'
 import PlayerService from '../services/player.service'
-import TrackService from '../services/track.service'
 import constant from '../config/constant'
 
 const log = require('debug')('INFO:VueInstallConfig:')
@@ -18,23 +17,25 @@ export default class BarrageController {
     return BarrageController.instance
   }
 
+  setEnv (env) {
+    this.env = env
+  }
+
   setConfig (props) {
     log('Config Set')
     // default pool
     this.player = new PlayerService()
-    this.track = new TrackService()
     this.config = {
       mode: LOCAL_MODE,
       ...props
     }
 
     this.messagePool = {
-      [DEFAULT_POOL_TAG] : new MessagePoolModel(this,{tag:DEFAULT_POOL_TAG,lanes:props.lanes})
+      [DEFAULT_POOL_TAG] : new MessagePoolModel(this,{tag:DEFAULT_POOL_TAG, lanes:props.lanes})
     }
   }
 
   play () {
-    this.track.start()
     this.player.play()
     this.player.interval((currentTime) => {
       this.playing(currentTime)
@@ -43,12 +44,10 @@ export default class BarrageController {
 
   pause () {
     this.player.pause()
-    this.track.pause()
   }
   
   stop () {
     this.player.stop()
-    this.track.pause()
   }
 
   playing (currentTime) {
@@ -62,18 +61,15 @@ export default class BarrageController {
     }
   }
 
-  push ({pool, lane, message}) {
-    pool = pool || DEFAULT_POOL_TAG
-    this.messagePool[pool].insert(message)
+  push ({pool, message}) {
+    this.messagePool[pool || DEFAULT_POOL_TAG].insert(message)
   }
   
-  pushList({pool, lane, messageList}) {
-    pool = pool || DEFAULT_POOL_TAG
+  pushList({messageList}) {
     this.messageList = messageList
   }
   
-  bindLane ({ pool, laneUIData}) {
-    pool = pool || DEFAULT_POOL_TAG
-    this.messagePool[pool].bindLane(laneUIData)
+  bindLane ({pool, laneUIData}) {
+    this.messagePool[pool || DEFAULT_POOL_TAG].bindLane(laneUIData)
   }
 }

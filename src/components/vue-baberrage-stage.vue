@@ -5,6 +5,7 @@
       <VueBaberrageLane 
         :ref="item.id" 
         :key="item.id" 
+        :model="item"
         :style="item.style"
         :queue="item.queue"
         v-for="item in lanesList"/>
@@ -12,16 +13,10 @@
 </template>
 <script>
 import config from '../config'
-import VueBaberrage from './vue-baberrage'
 import VueBaberrageLane from './vue-baberrage-lane'
 import BarrageController from '../controllers/barrage.controller'
-import MessageModel from '../models/message.model'
 import LaneModel from '../models/lane.model'
 import thrower from 'thrower'
-
-const BaberrageConfig = {
-  mode: VueBaberrage.LOCAL_MODE  
-}
 
 export default {
   name: 'VueBaberrageStage',
@@ -51,6 +46,7 @@ export default {
     this.lanesCount = this.lanes || config.default_lane
 
     this.barrageController = BarrageController.getInstance()
+    this.barrageController.setEnv(this)
 
     // Lane Amount
     this.laneInit()
@@ -61,10 +57,12 @@ export default {
   methods: {
     laneInit () {
       let height = config.default_message_height
+      // Adding Lane model
       Array.from({ length: this.lanesCount }, (v, k) => {
         this.lanesList.push(new LaneModel({
           id: `lane_${k}`,
           queue: [],
+          poolWidth: document.getElementById('vue-baberrage-stage').offsetWidth,
           style: {
             top: k * height + 'px',
             left: 0,
